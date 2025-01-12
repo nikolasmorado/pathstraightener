@@ -38,7 +38,6 @@ impl Node {
 }
 
 pub fn parse(tokens: &mut Vec<Token>) -> Vec<Node> {
-    println!("TOKENS: {:?}", tokens);
     if tokens.is_empty() {
         panic!("Unexpected end of tokens");
     }
@@ -46,11 +45,9 @@ pub fn parse(tokens: &mut Vec<Token>) -> Vec<Node> {
     let mut stack = Vec::<Node>::new();
 
     loop {
-        println!("STACK: {:?}", stack);
         if tokens.len() == 0 {
             break;
         }
-        println!("Tokens: {:?}", tokens);
         let next = tokens.remove(0);
         match next {
             Token::TagOpen(tag_name) => {
@@ -76,7 +73,6 @@ pub fn parse(tokens: &mut Vec<Token>) -> Vec<Node> {
                     } else {
                         if let Some(mut parent) = stack.pop() {
                             parent.children.push(node.clone());
-                            println!("PARENT, {:?}", parent);
                             stack.push(parent);
                         } else {
                             stack.push(node.clone());
@@ -98,5 +94,3 @@ pub fn parse(tokens: &mut Vec<Token>) -> Vec<Node> {
 
     stack
 }
-
-
