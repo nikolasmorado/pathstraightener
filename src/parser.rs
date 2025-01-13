@@ -50,7 +50,6 @@ pub fn parse(tokens: &mut Vec<Token>) -> Vec<Node> {
         }
         let next = tokens.remove(0);
         match next {
-
             Token::TagOpen(tag_name) => {
                 let name = String::from(tag_name);
 
@@ -99,7 +98,6 @@ pub fn parse(tokens: &mut Vec<Token>) -> Vec<Node> {
                     }
 
                     if let Some(nx) = tokens.get(0) {
-
                         match nx {
                             Token::TagClose => {
                                 if !eq_found && quotes_found == 0 {
@@ -189,7 +187,25 @@ pub fn parse(tokens: &mut Vec<Token>) -> Vec<Node> {
                 }
             }
 
-            // Token::
+            Token::Text(text) => {
+                let text_node = Node::new(
+                    NodeType::Text,
+                    String::from("text"),
+                    Some(String::from(text.clone())),
+                    HashMap::new(),
+                    Vec::new(),
+                );
+
+                if let Some(mut parent) = stack.pop() {
+                    parent.children.push(text_node);
+                    stack.push(parent);
+                } else {
+                    panic!(
+                        "Tried to add text {:?} to parent node, but no node found",
+                        text
+                    )
+                }
+            }
 
             _ => {
                 continue;

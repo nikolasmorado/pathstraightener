@@ -5,8 +5,8 @@ use parser::parse;
 use tokenizer::tokenize;
 
 fn main() {
-    let a = String::from(r#"<a className="soggy>>>froggy"><p><div><div></div></div></p><p></p></a>"#);
-    // let a = String::from(r#"<div class="tester" autoplay> "womp womp" the big cow said </div>"#);
+    // let a = String::from(r#"<a className="soggy>>>froggy"><p><div><div></div></div></p><p></p></a>"#);
+    let a = String::from(r#"<div class="tester" autoplay> "womp womp" the big cow said </div>"#);
     // let a = String::from(
     //     r###"<svg width="48px" height="1px" viewBox="0 0 48 1" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     //         <title>Rectangle 5</title>

@@ -16,6 +16,7 @@ pub fn tokenize(s: String) -> Vec<Token> {
     let mut chars = s.chars().peekable();
 
     let mut in_quote = false;
+    let mut in_tag = false;
     while let Some(c) = chars.next() {
         match c {
             '<' => {
@@ -38,12 +39,14 @@ pub fn tokenize(s: String) -> Vec<Token> {
                         tag.push(chars.next().unwrap());
                     }
                     tokens.push(Token::TagOpen(tag));
+                    in_tag = true;
                 }
             }
             '=' => {
                 tokens.push(Token::AssignTo);
             }
             '>' => {
+                in_tag = false;
                 tokens.push(Token::TagClose);
             }
             '"' => {
@@ -60,16 +63,28 @@ pub fn tokenize(s: String) -> Vec<Token> {
                 let mut text = c.to_string();
 
                 let mut hit_equals = false;
+                let mut hit_close = false;
+                let mut quote_found = true;
                 while let Some(&b) = chars.peek() {
-                    if b == '"' || (!in_quote && (b == '<' || b == '>')) {
+                    if b == '<' && !in_tag {
                         break;
-                    } else if b == '=' {
+                    } else if b == '>' && in_tag {
+                        hit_close = true;
+                        break;
+                    } else if !in_quote && (b == '<' || b == '>') {
+                        break;
+                    } else if b == '"' && in_tag && !quote_found {
+                        quote_found = true;
+                    } else if b == '"' && in_tag && quote_found {
+                        break;
+                    } else if b == '=' && in_tag {
                         hit_equals = true;
                         break;
                     }
                     text.push(chars.next().unwrap())
                 }
-                if hit_equals {
+
+                if hit_equals || hit_close {
                     tokens.push(Token::Attribute(text))
                 } else {
                     tokens.push(Token::Text(text))
