@@ -17,14 +17,35 @@ pub fn transpile(ast: Node, depth: u8) -> String {
             res.push_str(&prefix);
             res.push_str("<");
             res.push_str(&ast.tag_name);
-            
-            let mut properties: Vec<_> = ast.properties.iter().collect();
+
+            let mut properties: Vec<_> = ast
+                .properties
+                .iter()
+                .map(|(key, value)| {
+                    let camel_case_key: String = key
+                        .chars()
+                        .enumerate()
+                        .fold(
+                            (String::new(), false),
+                            |(mut result, mut capitalize_next), (_i, ch)| {
+                                if ch == '-' || ch == '_' || ch == ':' {
+                                    capitalize_next = true;
+                                } else if capitalize_next {
+                                    result.push(ch.to_ascii_uppercase());
+                                    capitalize_next = false;
+                                } else {
+                                    result.push(ch);
+                                }
+                                (result, capitalize_next)
+                            },
+                        )
+                        .0;
+                    (camel_case_key, value.clone())
+                })
+                .collect();
             properties.sort_by(|a, b| a.0.cmp(&b.0));
 
             for p in properties {
-                if p.0.contains(":") || (&ast.tag_name == "svg" && p.0 == "version") {
-                    continue;
-                }
                 res.push_str(" ");
                 res.push_str(&p.0);
                 res.push_str("={");
@@ -66,4 +87,3 @@ pub fn transpile(ast: Node, depth: u8) -> String {
 
     return res;
 }
-
