@@ -2,6 +2,7 @@
 pub enum Token {
     TagOpen(String),
     TagClose,
+    TagSelfClose,
     TagEnd(String),
     Attribute(String),
     AssignTo,
@@ -65,6 +66,16 @@ pub fn tokenize(s: String) -> Vec<Token> {
                 } else {
                     tokens.push(Token::QuoteOpen);
                     in_quote = true;
+                }
+            }
+            '/' => {
+                if in_tag {
+                    if let Some(b) = chars.peek() {
+                        if b == &'>' {
+                            chars.next().unwrap();
+                            tokens.push(Token::TagSelfClose);
+                        }
+                    }
                 }
             }
             c if c.is_whitespace() && !in_quote => {}

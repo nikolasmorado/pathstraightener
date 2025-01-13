@@ -3,7 +3,7 @@ use crate::parser::{Node, NodeType};
 pub fn transpile(ast: Node, depth: u8) -> String {
     let mut res = String::new();
 
-    let prefix = "\t".repeat(depth as usize);
+    let prefix = "\t".repeat(1 + depth as usize);
 
     if depth == 0 {
         res.push_str(r###"import * as React from "react""###);
@@ -19,6 +19,9 @@ pub fn transpile(ast: Node, depth: u8) -> String {
             res.push_str(&ast.tag_name);
 
             for p in ast.properties {
+                if p.0.contains(":") || (&ast.tag_name == "svg" && p.0 == "version") {
+                    continue;
+                }
                 res.push_str(" ");
                 res.push_str(&p.0);
                 res.push_str("={");

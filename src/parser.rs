@@ -63,6 +63,19 @@ pub fn parse(tokens: &mut Vec<Token>) -> Node {
 
                 stack.push(node.clone());
             }
+            
+            Token::TagSelfClose => {
+                if let Some(node) = stack.pop() {
+                    if let Some(mut parent) = stack.pop() {
+                        parent.children.push(node.clone());
+                        stack.push(parent);
+                    } else {
+                        panic!("Found self closing tag where one should not be");
+                    }
+                } else {
+                    panic!("Found self closing tag but no node to close")
+                }   
+            }
 
             Token::TagEnd(tag_name) => {
                 if let Some(node) = stack.pop() {
@@ -105,6 +118,16 @@ pub fn parse(tokens: &mut Vec<Token>) -> Node {
                                     break;
                                 } else if eq_found && quotes_found == 1 {
                                     value += ">"
+                                } else {
+                                    panic!("Attribute {:?} not terminated correctly", attr_name)
+                                }
+                            }
+                            Token::TagSelfClose => {
+                                if !eq_found && quotes_found == 0 {
+                                    value = String::from("true");
+                                    break;
+                                } else if eq_found && quotes_found == 1 {
+                                    value += "/>"
                                 } else {
                                     panic!("Attribute {:?} not terminated correctly", attr_name)
                                 }
