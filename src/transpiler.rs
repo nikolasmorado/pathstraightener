@@ -1,17 +1,24 @@
 use crate::parser::{Node, NodeType};
 
-pub fn transpile(ast: Node, depth: u8, component_name: &str) -> String {
+pub fn transpile(ast: Node, depth: u8, component_name: &str, typescript: bool) -> String {
     let mut res = String::new();
 
     let prefix = "\t".repeat(1 + depth as usize);
 
-
     if depth == 0 {
         res.push_str(r###"import * as React from "react""###);
         res.push('\n');
+        if typescript {
+            res.push_str(r###"import { SVGProps } from "react""###);
+            res.push('\n');
+        }
         res.push_str("const ");
         res.push_str(component_name);
-        res.push_str(" = (props) => {");
+        if typescript {
+            res.push_str(" = (props: SVGProps<SVGSVGElement>) => {");
+        } else {
+            res.push_str(" = (props) => {");
+        }
         res.push('\n');
     }
 
@@ -64,13 +71,13 @@ pub fn transpile(ast: Node, depth: u8, component_name: &str) -> String {
 
             if depth == 0 {
                 res.push_str(" {...props}");
-            }   
+            }
 
             res.push_str(">");
             res.push('\n');
 
             for c in ast.children {
-                res.push_str(&transpile(c, depth + 1, component_name));
+                res.push_str(&transpile(c, depth + 1, component_name, typescript));
                 res.push('\n');
             }
 

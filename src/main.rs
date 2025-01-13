@@ -13,6 +13,9 @@ struct Cli {
     /// Component name (optional, defaults to "svg")
     #[arg(value_name = "COMPONENT_NAME", default_value = "svg")]
     component_name: String,
+
+    #[arg(short = 't', long = "typescript")]
+    typescript: bool,
 }
 
 fn main() {
@@ -36,7 +39,7 @@ fn main() {
         String::new()
     };
 
-    let res = run(file_content, c_name);
+    let res = run(file_content, c_name, args.typescript);
 
     println!("{}", res);
 }
