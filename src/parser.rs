@@ -102,6 +102,7 @@ pub fn parse(tokens: &mut Vec<Token>) -> Vec<Node> {
                             Token::TagClose => {
                                 if !eq_found && quotes_found == 0 {
                                     value = String::from("true");
+                                    break;
                                 } else if eq_found && quotes_found == 1 {
                                     value += ">"
                                 } else {
