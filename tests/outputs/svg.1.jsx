@@ -1,6 +1,6 @@
 import * as React from "react"
-const SVG = (props) => {
-        <svg height={1} version={1.1} viewBox={"0 0 48 1"} width={48} xmlns={"http://www.w3.org/2000/svg"} xmlnsXlink={"http://www.w3.org/1999/xlink"}>
+const Svg = (props) => {
+        <svg height={1} version={1.1} viewBox={"0 0 48 1"} width={48} xmlns={"http://www.w3.org/2000/svg"} xmlnsXlink={"http://www.w3.org/1999/xlink"} {...props}>
                 <title>
                         Rectangle 5
                 </title>
@@ -25,4 +25,4 @@ const SVG = (props) => {
                 </g>
         </svg>
 }
-export default SVG;
+export default Svg;

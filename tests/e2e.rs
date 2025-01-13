@@ -13,7 +13,7 @@ fn it_converts_correctly() {
     use std::fs;
 
     let file_content = fs::read_to_string("tests/inputs/svg.1.svg").expect("Failed to read input file");
-    let result = run(file_content);
+    let result = run(file_content, String::from("Svg"));
 
     let file_content_out = fs::read_to_string("tests/outputs/svg.1.jsx").expect("Failed to read expected output file");
 

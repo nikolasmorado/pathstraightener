@@ -1,14 +1,17 @@
 use crate::parser::{Node, NodeType};
 
-pub fn transpile(ast: Node, depth: u8) -> String {
+pub fn transpile(ast: Node, depth: u8, component_name: &str) -> String {
     let mut res = String::new();
 
     let prefix = "\t".repeat(1 + depth as usize);
 
+
     if depth == 0 {
         res.push_str(r###"import * as React from "react""###);
         res.push('\n');
-        res.push_str("const SVG = (props) => {");
+        res.push_str("const ");
+        res.push_str(component_name);
+        res.push_str(" = (props) => {");
         res.push('\n');
     }
 
@@ -67,7 +70,7 @@ pub fn transpile(ast: Node, depth: u8) -> String {
             res.push('\n');
 
             for c in ast.children {
-                res.push_str(&transpile(c, depth + 1));
+                res.push_str(&transpile(c, depth + 1, component_name));
                 res.push('\n');
             }
 
@@ -86,7 +89,9 @@ pub fn transpile(ast: Node, depth: u8) -> String {
         res.push('\n');
         res.push_str("}");
         res.push('\n');
-        res.push_str("export default SVG;");
+        res.push_str("export default ");
+        res.push_str(component_name);
+        res.push_str(";");
     }
 
     return res;
