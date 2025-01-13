@@ -59,6 +59,10 @@ pub fn transpile(ast: Node, depth: u8) -> String {
                 res.push_str("}");
             }
 
+            if depth == 0 {
+                res.push_str(" {...props}");
+            }   
+
             res.push_str(">");
             res.push('\n');
 
