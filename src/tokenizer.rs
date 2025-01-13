@@ -30,6 +30,15 @@ pub fn tokenize(s: String) -> Vec<Token> {
                         tag.push(chars.next().unwrap());
                     }
                     tokens.push(Token::TagEnd(tag));
+                } else if chars.peek() == Some(&'!') {
+                    chars.next().unwrap();
+                    while let Some(b) = chars.peek() {
+                        if b == &'>' {
+                            chars.next().unwrap();
+                            break;
+                        }
+                        chars.next().unwrap();
+                    }
                 } else {
                     let mut tag = String::new();
                     while let Some(b) = chars.peek() {

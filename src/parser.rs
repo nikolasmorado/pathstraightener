@@ -12,11 +12,11 @@ pub enum NodeType {
 
 #[derive(Debug, Clone)]
 pub struct Node {
-    tag_type: NodeType,
-    tag_name: String,
-    value: Option<String>,
-    properties: HashMap<String, String>,
-    children: Vec<Node>,
+    pub tag_type: NodeType,
+    pub tag_name: String,
+    pub value: Option<String>,
+    pub properties: HashMap<String, String>,
+    pub children: Vec<Node>,
 }
 
 impl Node {
@@ -37,7 +37,7 @@ impl Node {
     }
 }
 
-pub fn parse(tokens: &mut Vec<Token>) -> Vec<Node> {
+pub fn parse(tokens: &mut Vec<Token>) -> Node {
     if tokens.is_empty() {
         panic!("Unexpected end of tokens");
     }
@@ -178,7 +178,12 @@ pub fn parse(tokens: &mut Vec<Token>) -> Vec<Node> {
                 }
 
                 if let Some(mut parent) = stack.pop() {
-                    parent.properties.insert(attr_name, String::from(value));
+                    let v = match value.strip_suffix("px") {
+                        Some(stripped) => stripped.to_string(),
+                        None => value,
+                    };
+
+                    parent.properties.insert(attr_name, String::from(v));
                     stack.push(parent);
                 } else {
                     panic!(
@@ -214,5 +219,9 @@ pub fn parse(tokens: &mut Vec<Token>) -> Vec<Node> {
         }
     }
 
-    stack
+    if stack.len() > 1 {
+        panic!("There must be only one root node")
+    }
+
+    stack[0].clone()
 }
