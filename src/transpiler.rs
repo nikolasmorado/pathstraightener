@@ -17,8 +17,11 @@ pub fn transpile(ast: Node, depth: u8) -> String {
             res.push_str(&prefix);
             res.push_str("<");
             res.push_str(&ast.tag_name);
+            
+            let mut properties: Vec<_> = ast.properties.iter().collect();
+            properties.sort_by(|a, b| a.0.cmp(&b.0));
 
-            for p in ast.properties {
+            for p in properties {
                 if p.0.contains(":") || (&ast.tag_name == "svg" && p.0 == "version") {
                     continue;
                 }

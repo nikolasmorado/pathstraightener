@@ -1,16 +1,7 @@
-mod optimizer;
-mod parser;
-mod tokenizer;
-mod transpiler;
-
 use std::fs;
+use psx::run;
 
 use clap::Parser;
-use optimizer::optimize;
-use parser::parse;
-use tokenizer::tokenize;
-use transpiler::transpile;
-
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Cli {
@@ -30,10 +21,7 @@ fn main() {
         }
     };
 
-    let mut tokens = tokenize(file_content);
-    let node = parse(&mut tokens);
-    let ast = optimize(node, 0);
-    let res = transpile(ast, 0);
+    let res = run(file_content);
 
     println!("{}", res);
 }
