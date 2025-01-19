@@ -16,4 +16,4 @@ psx <path> <name> [options]
 
 ### Options:
 - `-t` or `--typescript`: Exports the component with typescript annotations.
-- `-r` or `--react-native`: Exports the component with React Native support. 
+- `-n` or `--react-native`: Exports the component with React Native support. 
