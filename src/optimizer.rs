@@ -1,6 +1,11 @@
 use crate::parser::{Node, NodeType};
 
-pub fn optimize(mut ast: Node, depth: u8, translate: (f32, f32), fill: String) -> Node {
+pub fn optimize(
+    mut ast: Node,
+    depth: u8,
+    translate: (f32, f32),
+    fill: String,
+) -> Node {
     let mut t: (f32, f32) = (translate.0, translate.1);
     let mut f: String = fill;
 

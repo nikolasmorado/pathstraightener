@@ -10,12 +10,17 @@ struct Cli {
     #[arg(value_name = "INPUT")]
     input: String,
 
-    /// Component name (optional, defaults to "svg")
-    #[arg(value_name = "COMPONENT_NAME", default_value = "svg")]
+    /// Component name (optional, defaults to "psx")
+    #[arg(value_name = "COMPONENT_NAME", default_value = "psx")]
     component_name: String,
 
+    /// Enable TypeScript type annotations
     #[arg(short = 't', long = "typescript")]
     typescript: bool,
+
+    /// Export as a React Native component. 
+    #[arg(short = 'n', long = "react-native")]
+    react_native: bool,
 }
 
 fn main() {
@@ -39,7 +44,7 @@ fn main() {
         String::new()
     };
 
-    let res = run(file_content, c_name, args.typescript);
+    let res = run(file_content, c_name, args.typescript, args.react_native);
 
     println!("{}", res);
 }
